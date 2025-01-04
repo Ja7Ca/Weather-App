@@ -2,25 +2,26 @@
 import { useFetch } from '../utils/fetch'
 import WeatherCard from './WeatherCard.vue'
 // import { provinsiAPI, kabupatenAPI, kecamatanAPI, kelurahanAPI } from '../utils/url'
-</script>
-<script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const weatherData = ref([])
 
-const { data, error } = await useFetch(
-  'https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=31.72.03.1002',
-)
+onMounted(async () => {
+  const { data, error } = await useFetch(
+    'https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=31.72.03.1002',
+  )
 
-if (data.data[0].cuaca[0].length < 7) {
-  weatherData.value = [
-    ...data.data[0].cuaca[0],
-    ...data.data[0].cuaca[1].slice(0, 7 - data.data[0].cuaca[0].length),
-  ]
-} else {
-  weatherData.value = data.data[0].cuaca[0]
-}
-console.log(error)
+  console.log(data, error)
+
+  if (data?.data[0].cuaca[0].length < 7) {
+    weatherData.value = [
+      ...data.data[0].cuaca[0],
+      ...data.data[0].cuaca[1].slice(0, 7 - data.data[0].cuaca[0].length),
+    ]
+  } else {
+    weatherData.value = data?.data[0].cuaca[0]
+  }
+})
 </script>
 
 <template>
